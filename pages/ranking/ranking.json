@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "全国油价排行榜",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "@bgColor",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
+}

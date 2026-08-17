@@ -1,0 +1,178 @@
+<view class="container {{showProvincePicker ? 'container-lock' : ''}}">
+  <!-- 头部：左上Logo + 右上省份选择 -->
+  <view class="header">
+    <view class="header-left">
+      <text class="logo-icon">⛽</text>
+      <text class="logo-text">油价查询</text>
+    </view>
+    <view class="province-picker" wx:if="{{provinceList.length > 0}}">
+      <picker
+        mode="selector"
+        range="{{provinceList}}"
+        value="{{provinceList.indexOf(selectedProvince)}}"
+        bindchange="onProvinceChange"
+      >
+        <view class="picker-current">
+          <text class="location-icon">📍</text>
+          <text>{{selectedProvince || '选择省份'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="cache-tip" wx:if="{{usingCache}}"><text>⚠️ 显示缓存数据</text></view>
+  <view class="cache-tip default-tip" wx:if="{{usingDefault}}"><text>⚠️ 显示参考数据</text></view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="skeleton-circle"></view>
+    <view class="skeleton-big-text"></view>
+    <view class="skeleton-row"></view>
+    <view class="skeleton-row short"></view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error && !currentPrice}}">
+    <text class="error-icon">😞</text>
+    <text class="error-text">数据加载失败</text>
+    <button class="retry-btn" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <!-- 主内容区 -->
+  <view class="main-content" wx:if="{{!loading && currentPrice}}">
+    <!-- 油品价格 + 调价时间 + 倒计时（成组，间距紧凑） -->
+    <view class="top-group">
+    <view class="sub-cards">
+      <view class="sub-card">
+        <view class="sub-type"><text class="oil-icon">⛽</text>92# 汽油</view>
+        <view class="sub-price-row">
+          <text class="sub-symbol">¥</text>
+          <text class="sub-value">{{currentPrice.n92}}</text>
+          <text class="sub-unit">/升</text>
+        </view>
+        <view class="sub-change {{currentPrice.n92Change > 0 ? 'up' : currentPrice.n92Change < 0 ? 'down' : 'flat'}}">
+          <text class="change-arrow">{{currentPrice.n92Change > 0 ? '↑' : currentPrice.n92Change < 0 ? '↓' : '→'}}</text>
+          <text class="change-value">{{currentPrice.n92Change > 0 ? '+' : ''}}{{currentPrice.n92Change}}</text>
+          <text class="change-label">较上轮</text>
+        </view>
+      </view>
+      <view class="sub-card">
+        <view class="sub-type"><text class="oil-icon">🔥</text>95# 汽油</view>
+        <view class="sub-price-row">
+          <text class="sub-symbol">¥</text>
+          <text class="sub-value">{{currentPrice.n95}}</text>
+          <text class="sub-unit">/升</text>
+        </view>
+        <view class="sub-change {{currentPrice.n95Change > 0 ? 'up' : currentPrice.n95Change < 0 ? 'down' : 'flat'}}">
+          <text class="change-arrow">{{currentPrice.n95Change > 0 ? '↑' : currentPrice.n95Change < 0 ? '↓' : '→'}}</text>
+          <text class="change-value">{{currentPrice.n95Change > 0 ? '+' : ''}}{{currentPrice.n95Change}}</text>
+          <text class="change-label">较上轮</text>
+        </view>
+      </view>
+      <view class="sub-card">
+        <view class="sub-type"><text class="oil-icon">✨</text>98# 汽油</view>
+        <view class="sub-price-row">
+          <text class="sub-symbol">¥</text>
+          <text class="sub-value">{{currentPrice.n98}}</text>
+          <text class="sub-unit">/升</text>
+        </view>
+        <view class="sub-change {{currentPrice.n98Change > 0 ? 'up' : currentPrice.n98Change < 0 ? 'down' : 'flat'}}">
+          <text class="change-arrow">{{currentPrice.n98Change > 0 ? '↑' : currentPrice.n98Change < 0 ? '↓' : '→'}}</text>
+          <text class="change-value">{{currentPrice.n98Change > 0 ? '+' : ''}}{{currentPrice.n98Change}}</text>
+          <text class="change-label">较上轮</text>
+        </view>
+      </view>
+      <view class="sub-card">
+        <view class="sub-type"><text class="oil-icon">🛢️</text>0# 柴油</view>
+        <view class="sub-price-row">
+          <text class="sub-symbol">¥</text>
+          <text class="sub-value">{{currentPrice.n0}}</text>
+          <text class="sub-unit">/升</text>
+        </view>
+        <view class="sub-change {{currentPrice.n0Change > 0 ? 'up' : currentPrice.n0Change < 0 ? 'down' : 'flat'}}">
+          <text class="change-arrow">{{currentPrice.n0Change > 0 ? '↑' : currentPrice.n0Change < 0 ? '↓' : '→'}}</text>
+          <text class="change-value">{{currentPrice.n0Change > 0 ? '+' : ''}}{{currentPrice.n0Change}}</text>
+          <text class="change-label">较上轮</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 调价时间 -->
+    <view class="adjust-section">
+      <view class="adjust-item">
+        <text class="adjust-icon">🕒</text>
+        <text class="adjust-label">本次调价时间</text>
+        <text class="adjust-value">{{currentDate}} 24:00</text>
+      </view>
+      <view class="adjust-item">
+        <text class="adjust-icon">⏳</text>
+        <text class="adjust-label">下次调价时间</text>
+        <text class="adjust-value">{{nextAdjustDate}} 24:00</text>
+      </view>
+    </view>
+
+    <!-- 倒计时卡片 -->
+    <view class="countdown-card" wx:if="{{countdownText}}">
+      <view class="countdown-content">
+        <text class="countdown-label">距离下次调价</text>
+        <text class="countdown-time">{{countdownText}}</text>
+      </view>
+      <view class="countdown-decoration"></view>
+    </view>
+    </view>
+    <button open-type="share" class="share-btn">
+      <text>分享给好友</text>
+    </button>
+  </view>
+
+  <!-- 省份选择弹窗（全屏，列表式+搜索，选择前不可绕过） -->
+  <view class="picker-modal" wx:if="{{showProvincePicker}}">
+    <!-- 全屏弹窗：选择省份前底部 tabBar 已隐藏，无法切页绕过 -->
+    <view class="modal-content" catchtouchmove="noop">
+      <!-- 头部 -->
+      <view class="modal-header">
+        <view class="modal-icon">📍</view>
+        <view class="modal-title">选择您所在的省份</view>
+        <view class="modal-hint">为你提供准确的油价信息</view>
+      </view>
+
+      <!-- 搜索框 -->
+      <view class="modal-search">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          placeholder="搜索省份，如：广东"
+          placeholder-class="search-placeholder"
+          value="{{searchKeyword}}"
+          confirm-type="search"
+          bindinput="onSearchInput"
+        />
+        <text class="search-clear" wx:if="{{searchKeyword}}" bindtap="onClearSearch">✕</text>
+      </view>
+
+      <!-- 省份列表 -->
+      <scroll-view class="province-list" scroll-y>
+        <view
+          class="province-item {{tempSelectedProvince === item ? 'selected' : ''}}"
+          wx:for="{{filteredProvinces}}"
+          wx:key="*this"
+          data-province="{{item}}"
+          bindtap="onTapProvince"
+        >
+          <text class="province-name">{{item}}</text>
+          <text class="province-check" wx:if="{{tempSelectedProvince === item}}">✓</text>
+        </view>
+        <view class="province-empty" wx:if="{{filteredProvinces.length === 0}}">
+          <text>未找到「{{searchKeyword}}」，换个关键词试试</text>
+        </view>
+      </scroll-view>
+
+      <!-- 底部按钮 -->
+      <view class="modal-actions">
+        <button class="modal-btn cancel" bindtap="onClosePicker">跳过</button>
+        <button class="modal-btn confirm" bindtap="onConfirmProvince">确认选择</button>
+      </view>
+    </view>
+  </view>
+</view>

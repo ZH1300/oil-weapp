@@ -1,0 +1,84 @@
+<view class="container">
+  <!-- 顶部 -->
+  <view class="header">
+    <view class="header-title">📊 全国油价排行榜</view>
+    <view class="header-date" wx:if="{{dataDate}}">数据 {{dataDate}}</view>
+  </view>
+
+  <view class="cache-tip" wx:if="{{usingCache}}"><text>⚠️ 显示缓存数据</text></view>
+  <view class="cache-tip default-tip" wx:if="{{usingDefault}}"><text>⚠️ 显示参考数据</text></view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="skeleton-circle"></view>
+    <view class="skeleton-row"></view>
+    <view class="skeleton-row short"></view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-state" wx:if="{{error && !loading}}">
+    <text class="error-icon">😞</text>
+    <text class="error-text">数据加载失败</text>
+    <button class="retry-btn" bindtap="onRetry">重新加载</button>
+  </view>
+
+  <!-- 内容 -->
+  <block wx:if="{{!loading && !error}}">
+    <!-- 油品切换 -->
+    <view class="tabs">
+      <view
+        class="tab {{currentType === item.key ? 'active' : ''}}"
+        wx:for="{{oilTypes}}"
+        wx:key="key"
+        data-type="{{item.key}}"
+        bindtap="onSwitchType"
+      >{{item.label}}</view>
+    </view>
+
+    <!-- 汇总卡片 -->
+    <view class="stats-card" wx:if="{{ranking.length > 0}}">
+      <view class="stat-item">
+        <text class="stat-label">覆盖省份</text>
+        <text class="stat-value">{{ranking.length}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">最高价</text>
+        <text class="stat-value up">¥{{highest.price}}</text>
+        <text class="stat-province">{{highest.regionName}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">最低价</text>
+        <text class="stat-value down">¥{{lowest.price}}</text>
+        <text class="stat-province">{{lowest.regionName}}</text>
+      </view>
+    </view>
+
+    <!-- 排行列表 -->
+    <view class="rank-list" wx:if="{{ranking.length > 0}}">
+      <view
+        class="rank-card {{item.rankClass}}"
+        wx:for="{{ranking}}"
+        wx:key="regionName"
+        data-province="{{item.regionName}}"
+        bindtap="onTapProvince"
+        hover-class="rank-card-hover"
+      >
+        <view class="rank-no {{item.isTop3 ? 'top' : ''}}">
+          <text wx:if="{{item.isTop3}}">{{item.rankIcon}}</text>
+          <text wx:else>{{item.rank}}</text>
+        </view>
+        <view class="rank-name">{{item.regionName}}</view>
+        <view class="rank-price">
+          <text class="rank-symbol">¥</text>
+          <text class="rank-value">{{item.price}}</text>
+          <text class="rank-unit">/升</text>
+        </view>
+        <view class="rank-change {{item.trendClass}}">
+          <text>{{item.changeText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="rank-hint" wx:if="{{ranking.length > 0}}">💡 点击省份可查看当地油价详情</view>
+  </block>
+</view>

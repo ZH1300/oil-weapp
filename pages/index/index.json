@@ -1,0 +1,6 @@
+{
+  "enablePullDownRefresh": true,
+  "backgroundColor": "@bgColor",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
+}

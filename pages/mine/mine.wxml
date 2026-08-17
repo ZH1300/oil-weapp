@@ -1,0 +1,51 @@
+<!-- pages/mine/mine.wxml -->
+<view class="container">
+  <!-- 用户信息区 -->
+  <view class="user-card">
+    <view class="avatar">👤</view>
+    <view class="user-text">用户</view>
+    <view class="user-tag">油查查New</view>
+  </view>
+
+  <!-- 最近查看省份 -->
+  <view class="section-card" wx:if="{{recentProvinces.length > 0}}">
+    <view class="section-title">最近查看</view>
+    <view class="province-chips">
+      <view
+        class="province-chip"
+        wx:for="{{recentProvinces}}"
+        wx:key="*this"
+        data-province="{{item}}"
+        bindtap="onGoProvince"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-card">
+    <view class="menu-item">
+      <text class="menu-icon">🕒</text>
+      <text class="menu-title">数据更新时间</text>
+      <text class="menu-value">{{dataUpdateTime || '暂无'}}</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="showFeedback">
+      <text class="menu-icon">💬</text>
+      <text class="menu-title">意见反馈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="showAbout">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-title">关于</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="clearCache">
+      <text class="menu-icon">🗑️</text>
+      <text class="menu-title">清除缓存</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 底部版本 -->
+  <view class="footer">油查查New v{{version}}</view>
+</view>

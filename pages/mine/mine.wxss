@@ -1,1 +1,131 @@
+/* pages/mine/mine.wxss */
+.container {
+  min-height: 100vh;
+  background: var(--bg-page);
+  padding: 30rpx 32rpx;
+  box-sizing: border-box;
+}
 
+/* 用户卡片 */
+.user-card {
+  background: var(--bg-card);
+  border-radius: 24rpx;
+  padding: 48rpx 32rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  margin-bottom: 30rpx;
+}
+
+.avatar {
+  font-size: 64rpx;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-subtle);
+  border-radius: 50%;
+  margin-right: 24rpx;
+}
+
+.user-text {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.user-tag {
+  font-size: 22rpx;
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 20rpx;
+  padding: 4rpx 16rpx;
+  margin-left: auto;
+}
+
+/* 最近查看省份 */
+.section-card {
+  background: var(--bg-card);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  margin-bottom: 30rpx;
+}
+.section-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20rpx;
+}
+.province-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.province-chip {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-size: 26rpx;
+  padding: 14rpx 28rpx;
+  border-radius: 36rpx;
+}
+.province-chip:active {
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+}
+
+/* 功能菜单 */
+.menu-card {
+  background: var(--bg-card);
+  border-radius: 24rpx;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  overflow: hidden;
+  margin-bottom: 30rpx;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 30rpx;
+  border-bottom: 1rpx solid var(--line);
+  transition: background 0.2s;
+}
+
+.menu-item:active {
+  background: var(--bg-subtle);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  width: 48rpx;
+  text-align: center;
+}
+
+.menu-title {
+  flex: 1;
+  font-size: 30rpx;
+  color: var(--text-primary);
+}
+.menu-value {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-right: 12rpx;
+}
+
+.menu-arrow {
+  font-size: 32rpx;
+  color: var(--text-secondary);
+}
+
+/* 底部版本 */
+.footer {
+  text-align: center;
+  margin-top: 40rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
